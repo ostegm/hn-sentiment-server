@@ -1,8 +1,12 @@
+language: node_js
+node_js: node
+services:
+- mongodb
 deploy:
   provider: gae
-  keyfile: "hn-sentiment-9e2c039bf94c.json"
-  project: "hn-sentiment"
-
+  keyfile: hn-sentiment-9e2c039bf94c.json
+  project: hn-sentiment
+  default: true
 before_install:
 - openssl aes-256-cbc -K $encrypted_ec3aeee44a4a_key -iv $encrypted_ec3aeee44a4a_iv
   -in hn-sentiment-9e2c039bf94c.json.enc -out hn-sentiment-9e2c039bf94c.json -d
