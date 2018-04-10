@@ -7,7 +7,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.get('/api/*', (req, res) => {
-  res.json({ ok: true });
+  const test = process.env.TEST_ENV_VAR || 'nope';
+  res.json({ ok: test });
 });
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
