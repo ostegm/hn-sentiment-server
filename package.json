@@ -6,7 +6,6 @@
   "scripts": {
     "prestart": "node getEnv",
     "start": "node server.js",
-    "pretest": "node getEnv",
     "test": "mocha --exit"
   },
   "repository": {
