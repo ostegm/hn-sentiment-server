@@ -57,3 +57,4 @@ typings/
 # dotenv environment variables file
 .env
 
+hn-sentiment-3b3b291ae079.json

@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "prestart": "node getEnv",
     "start": "node server.js",
     "test": "mocha --exit"
   },
@@ -18,9 +19,11 @@
   },
   "homepage": "https://github.com/ostegm/hn-sentiment-server#readme",
   "dependencies": {
+    "@google-cloud/storage": "^1.6.0",
     "body-parser": "^1.18.2",
     "chai": "^4.1.2",
     "chai-http": "^4.0.0",
+    "dotenv": "^5.0.1",
     "express": "^4.16.3",
     "mocha": "^5.0.5",
     "mongoose": "^5.0.14"
