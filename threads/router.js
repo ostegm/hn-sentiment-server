@@ -1,29 +1,43 @@
+const axios = require('axios');
 const express = require('express');
-const bodyParser = require('body-parser');
 const { Thread } = require('./models');
-
+const { HACKER_NEWS_API } = require('../config');
 const router = express.Router();
-const jsonParser = bodyParser.json();
 
+const hnRequest = (itemId) => {
+  return axios.get(`${HACKER_NEWS_API}${itemId}.json`);
+};
+
+const getKids = (kidIds) => {
+  return axios.all(kidIds.map(hnRequest));
+};
+
+const addThread = async (threadId) => {
+  const parent = await hnRequest(threadId);
+  const threadData = parent.data;
+  if (threadData.kids) {
+    // Replace array of thread Id's with an array of objects from HN News API.
+    const kids = await getKids(threadData.kids);
+    threadData.kids = kids.map(kid => kid.data);
+  }
+  return Thread.create(threadData);
+};
 
 // Get all books for a specific userId.
-router.get('/:threadId', (req, res) => {
+router.get('/:id', async (req, res) => {
   // Protected by JWT auth, so all requests should have a user object.
-  const { threadId } = req.params;
-  return Thread.findOne({ threadId })
-    .then((thread) => {
-      console.log(thread);
-      res.json(thread.serialize());
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).json({ error: 'something went wrong' });
-    });
+  try {
+    const { id } = req.params;
+    let thread = await Thread.findOne({ id });
+    if (!thread) {
+      thread = await addThread(id);
+    }
+    res.json(thread.serialize());
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'something went wrong' });
+  }
 });
 
-
-// Don't forget the jsonParser
-// router.put('/:id', jsonParser, (req, res) => {
-// }
 
 module.exports = { router };
