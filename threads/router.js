@@ -23,7 +23,11 @@ const addSentimentAnalysis = async (kid) => {
 
 const getKids = async (kidIds) => {
   const kids = (await axios.all(kidIds.map(hnRequest))).map(k => k.data);
-  return kids.map(addSentimentAnalysis);
+  const kidsWithSentiments = await Promise.all(kids.map( async (kid) => {
+    const sentiment = await addSentimentAnalysis(kid);
+    return sentiment;
+  }));
+  return kidsWithSentiments;
 };
 
 const addThread = async (threadId) => {
