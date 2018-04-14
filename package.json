@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/ostegm/hn-sentiment-server#readme",
   "dependencies": {
+    "@google-cloud/language": "^1.2.0",
     "@google-cloud/storage": "^1.6.0",
     "axios": "^0.18.0",
     "body-parser": "^1.18.2",
