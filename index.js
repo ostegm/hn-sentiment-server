@@ -4,13 +4,12 @@ require('dotenv').config();
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const express = require('express');
-const { DATABASE_URL } = require('./config');
+const { DATABASE_URL, NODE_ENV, PORT } = require('./config');
 const { router: threadsRouter, Thread } = require('./threads');
 
 mongoose.Promise = global.Promise;
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 
 app.use(morgan('common'));
@@ -24,8 +23,9 @@ app.use(function(req, res, next) {
   next();
 });
 
+// TODO - Deleteme
 app.get('/', (req, res) => {
-  const test = process.env.TEST_ENV_VAR || 'nope';
+  const test = process.env.TEST_ENV_VAR || 'nope'; // Todo deleteme.
   res.json({ ok: test });
 });
 
