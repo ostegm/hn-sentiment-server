@@ -16,13 +16,20 @@ const hnRequest = (itemId) => {
 };
 
 const addSentimentAnalysis = async (kid) => {
-  const document = {
-    content: kid.text,
-    type: 'PLAIN_TEXT',
-  };
-  const results = await sentimentClient.analyzeSentiment({ document });
   kid.wordCount = wordCount(kid.text);
-  kid.documentSentiment = results[0].documentSentiment;
+  if (NODE_ENV === 'production') {
+    const document = {
+      content: kid.text,
+      type: 'PLAIN_TEXT',
+    };
+    const results = await sentimentClient.analyzeSentiment({ document });
+    kid.documentSentiment = results[0].documentSentiment;   
+  } else {
+    kid.documentSentiment = {
+      score: Math.random(),
+      magnitude: Math.random() * 100,
+    };
+  }
   return kid;
 };
 
