@@ -4,15 +4,14 @@ const faker = require('faker');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const { app, runServer, closeServer } = require('../index');
-const {
-  Thread, mean, wordCount, addSentimentAnalysis,
-} = require('../threads');
+const { Thread, mean, wordCount } = require('../threads');
 const { TEST_DATABASE_URL } = require('../config');
 
 process.env.NODE_ENV = 'test';
 const { expect } = chai;
 const should = chai.should();
 chai.use(chaiHttp);
+
 
 function seedCollection() {
   const seedKids = [];

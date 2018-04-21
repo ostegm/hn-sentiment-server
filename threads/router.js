@@ -105,6 +105,6 @@ router.get('/:id', async (req, res) => {
 
 
 module.exports = {
-  router, mean, wordCount, addSentimentAnalysis,
+  router, mean, wordCount, addSentimentAnalysis, getKids,
 };
 
