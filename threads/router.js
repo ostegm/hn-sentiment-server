@@ -81,7 +81,7 @@ const updateThread = async (thread) => {
 
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
-  const isNumber = /^\d+$/.test(id)
+  const isNumber = /^\d+$/.test(id);
   if (!isNumber) {
     res.status(500).json({ error: 'Thread id must be an integer.' });
     return;
