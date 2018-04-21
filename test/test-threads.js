@@ -19,6 +19,8 @@ function seedCollection() {
     seedKids.push({
       by: `${faker.name.firstName()} ${faker.name.lastName()}`,
       id: i,
+      type: 'comment',
+      time: 123456789,
       text: faker.lorem.text(),
       wordCount: 100,
       documentSentiment: {
@@ -35,6 +37,8 @@ function seedCollection() {
     kids: seedKids,
     by: `${faker.name.firstName()} ${faker.name.lastName()}`,
     descendants: 10,
+    type: 'story',
+    time: 123456789,
     title: faker.lorem.sentence(),
     url: 'adawdawdad',
     lastUpdated: new Date(),
@@ -84,12 +88,12 @@ describe('/api/threads', function () {
     res.should.have.status(200);
     res.should.be.json;
     const expectedKeys = [
-      'by', 'descendants', 'id', 'kids', 'title', 'url',
+      'by', 'descendants', 'id', 'kids', 'title', 'type', 'url',
       'avgWordCount', 'avgSentiment', 'avgMagnitude', 'lastUpdated'];
     expect(res.body).to.include.keys(expectedKeys);
     res.body.kids.forEach((kid) => {
       expect(kid).to.be.a('object');
-      expect(kid).to.include.keys(['by', 'id', 'text', 'wordCount', 'documentSentiment']);
+      expect(kid).to.include.keys(['by', 'id', 'text', 'type', 'wordCount', 'documentSentiment']);
       expect(kid.documentSentiment.score).to.be.at.least(-1);
       expect(kid.documentSentiment.score).to.be.at.most(1);
     });
