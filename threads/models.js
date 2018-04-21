@@ -52,6 +52,7 @@ ThreadSchema.methods.serialize = function () {
     time: this.time,
     type: this.type,
     title: this.title,
+    text: this.text,
     url: this.url,
   };
 };
