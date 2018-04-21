@@ -7,9 +7,13 @@ const { HACKER_NEWS_API, NODE_ENV } = require('../config');
 const router = express.Router();
 const sentimentClient = new language.LanguageServiceClient();
 
-const mean = arr => arr.reduce( ( p, c ) => p + c, 0 ) / arr.length;
-const wordCount = (someString) => (someString.trim().split(/\s+/).length);
-
+const mean = arr => arr.reduce((p, c) => p + c, 0) / arr.length;
+const wordCount = (someString) => {
+  if (someString.length > 0) {
+    return someString.trim().split(/\s+/).length;
+  }
+  return 0;
+}
 
 const hnRequest = (itemId) => {
   return axios.get(`${HACKER_NEWS_API}${itemId}.json`);
@@ -17,9 +21,10 @@ const hnRequest = (itemId) => {
 
 const addSentimentAnalysis = async (kid) => {
   kid.wordCount = wordCount(kid.text);
-  if (NODE_ENV === 'production') {
+  if (NODE_ENV === 'production' | NODE_ENV === 'development') {
     const document = {
       content: kid.text,
+      language: 'en',
       type: 'PLAIN_TEXT',
     };
     const results = await sentimentClient.analyzeSentiment({ document });
@@ -74,12 +79,14 @@ const updateThread = async (thread) => {
   );
 };
 
-
-// Get all books for a specific userId.
 router.get('/:id', async (req, res) => {
-  // Protected by JWT auth, so all requests should have a user object.
+  const { id } = req.params;
+  const isNumber = /^\d+$/.test(id)
+  if (!isNumber) {
+    res.status(500).json({ error: 'Thread id must be an integer.' });
+    return;
+  }
   try {
-    const { id } = req.params;
     let thread = await Thread.findOne({ id });
     if (!thread) {
       thread = await addThread(id);
@@ -95,4 +102,4 @@ router.get('/:id', async (req, res) => {
 });
 
 
-module.exports = { router };
+module.exports = { router, mean, wordCount };

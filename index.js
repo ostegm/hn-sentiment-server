@@ -4,7 +4,7 @@ require('dotenv').config();
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const express = require('express');
-const { DATABASE_URL, NODE_ENV, PORT } = require('./config');
+const { DATABASE_URL, TEST_DATABASE_URL, NODE_ENV, PORT } = require('./config');
 const { router: threadsRouter, Thread } = require('./threads');
 
 mongoose.Promise = global.Promise;
@@ -75,7 +75,11 @@ function closeServer() {
 }
 
 if (require.main === module) {
-  runServer(DATABASE_URL).catch(err => console.error(err));
+  if (NODE_ENV === 'production') {
+    runServer(DATABASE_URL).catch(err => console.error(err));
+  } else {
+    runServer(TEST_DATABASE_URL).catch(err => console.error(err));
+  }
 }
 
 module.exports = { app, runServer, closeServer };

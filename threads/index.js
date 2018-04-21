@@ -1,4 +1,4 @@
 const { Thread } = require('./models');
-const { router } = require('./router');
+const { router, mean, wordCount } = require('./router');
 
-module.exports = { Thread, router };
+module.exports = { Thread, router, mean, wordCount };
