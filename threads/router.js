@@ -9,37 +9,39 @@ const sentimentClient = new language.LanguageServiceClient();
 
 const mean = arr => arr.reduce((p, c) => p + c, 0) / arr.length;
 const wordCount = (someString) => {
-  if (someString.length > 0) {
-    return someString.trim().split(/\s+/).length;
+  if (!someString) {
+    return 0;
   }
-  return 0;
-}
+  return someString.trim().split(/\s+/).length;
+};
 
 const hnRequest = (itemId) => {
   return axios.get(`${HACKER_NEWS_API}${itemId}.json`);
 };
 
-const addSentimentAnalysis = async (kid) => {
+const addSentimentAnalysis = async (kid, nodeEnv = NODE_ENV) => {
   kid.wordCount = wordCount(kid.text);
-  if (NODE_ENV === 'production' | NODE_ENV === 'development') {
+  if (nodeEnv === 'test') {
+    kid.documentSentiment = {
+      score: Math.random(),
+      magnitude: Math.random() * 100,
+    };
+  } else {
     const document = {
       content: kid.text,
       language: 'en',
       type: 'PLAIN_TEXT',
     };
     const results = await sentimentClient.analyzeSentiment({ document });
-    kid.documentSentiment = results[0].documentSentiment;   
-  } else {
-    kid.documentSentiment = {
-      score: Math.random(),
-      magnitude: Math.random() * 100,
-    };
+    kid.documentSentiment = results[0].documentSentiment;
   }
   return kid;
 };
 
 const getKids = async (kidIds) => {
-  const kids = (await axios.all(kidIds.map(hnRequest))).map(k => k.data);
+  let kids = (await axios.all(kidIds.map(hnRequest))).map(k => k.data);
+  // Keep only kids with text.
+  kids = kids.filter(k => k.text);
   const kidsWithSentiments = await Promise.all(kids.map(async (kid) => {
     const sentiment = await addSentimentAnalysis(kid);
     return sentiment;
@@ -102,4 +104,7 @@ router.get('/:id', async (req, res) => {
 });
 
 
-module.exports = { router, mean, wordCount };
+module.exports = {
+  router, mean, wordCount, addSentimentAnalysis,
+};
+

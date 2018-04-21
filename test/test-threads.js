@@ -4,7 +4,9 @@ const faker = require('faker');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const { app, runServer, closeServer } = require('../index');
-const { Thread, mean, wordCount } = require('../threads');
+const {
+  Thread, mean, wordCount, addSentimentAnalysis,
+} = require('../threads');
 const { TEST_DATABASE_URL } = require('../config');
 
 process.env.NODE_ENV = 'test';
@@ -97,7 +99,7 @@ describe('/api/threads', function () {
   it('should Update threads older than 1 min', async function () {
     this.timeout(5000);
     const res = await chai.request(app).get('/api/threads/8863');
-    res.body.kids.length.should.be.at.least(33);
+    res.body.kids.length.should.be.at.least(32);
   });
 
   it('should 500 on GET requests for invalid IDs ', async function () {
@@ -108,7 +110,7 @@ describe('/api/threads', function () {
 });
 
 
-describe('wordcount and mean', function () {
+describe('Utility function tests', function () {
   it('Should return zero wordcount for an empty string', function () {
     const cnt = wordCount('');
     cnt.should.equal(0);
