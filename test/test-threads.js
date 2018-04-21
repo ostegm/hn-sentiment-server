@@ -19,6 +19,7 @@ function seedCollection() {
     seedKids.push({
       by: `${faker.name.firstName()} ${faker.name.lastName()}`,
       id: i,
+      kids: [1, 2, 3],
       type: 'comment',
       time: 123456789,
       text: faker.lorem.text(),
@@ -93,7 +94,9 @@ describe('/api/threads', function () {
     expect(res.body).to.include.keys(expectedKeys);
     res.body.kids.forEach((kid) => {
       expect(kid).to.be.a('object');
-      expect(kid).to.include.keys(['by', 'id', 'text', 'type', 'wordCount', 'documentSentiment']);
+      expect(kid).to.include.keys(
+        ['by', 'id', 'text', 'type', 'wordCount', 'documentSentiment', 'kids',]
+      );
       expect(kid.documentSentiment.score).to.be.at.least(-1);
       expect(kid.documentSentiment.score).to.be.at.most(1);
     });
