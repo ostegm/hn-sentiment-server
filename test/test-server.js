@@ -26,6 +26,12 @@ describe('High level server tests', function () {
     res.should.be.json;
   });
 
+  it('should 200 on GET /threads/recent', async function () {
+    const res = await chai.request(app).get('/api/threads/recent');
+    res.should.have.status(200);
+    res.should.be.json;
+  });
+
   it('should 404 on GET requests for invalid paths ', async function () {
     const res = await chai.request(app).get('/api/XXXX');
     res.should.have.status(404);

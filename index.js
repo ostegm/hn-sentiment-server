@@ -30,7 +30,16 @@ app.get('/', (req, res) => {
 });
 
 // Routers
+app.get('/api/threads/recent', async (req, res) => {
+  let recent = await Thread.find(
+    {type: 'story'}, {}, { sort: { 'lastUpdated' : -1 } })
+    .limit(20);
+  recent = recent.map((r) => ({title: r.title, id: r.id, sentiment: r.avgSentiment}))
+  res.status(200).json(recent)
+})
+
 app.use('/api/threads/', threadsRouter);
+
 
 
 app.use('*', (req, res) => {
