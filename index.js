@@ -23,12 +23,6 @@ app.use(function(req, res, next) {
   next();
 });
 
-// TODO - Deleteme
-app.get('/', (req, res) => {
-  const test = process.env.TEST_ENV_VAR || 'nope'; // Todo deleteme.
-  res.json({ ok: test });
-});
-
 // Routers
 app.get('/api/threads/recent', async (req, res) => {
   let recent = await Thread.find(
