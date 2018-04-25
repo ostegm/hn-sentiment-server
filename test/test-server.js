@@ -20,12 +20,6 @@ describe('High level server tests', function () {
     return closeServer();
   });
 
-  it('should 200 on GET /', async function () {
-    const res = await chai.request(app).get('/');
-    res.should.have.status(200);
-    res.should.be.json;
-  });
-
   it('should 200 on GET /threads/recent', async function () {
     const res = await chai.request(app).get('/api/threads/recent');
     res.should.have.status(200);
