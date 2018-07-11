@@ -1,4 +1,5 @@
 runtime: nodejs8
+service: api
 # runtime: nodejs
 # env: flex
 # manual_scaling:
