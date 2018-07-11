@@ -9,6 +9,6 @@ deploy:
   app: hn-sentiment-server
   on:
     repo: ostegm/hn-sentiment-server
-    branch: heroku
+    branch: master
 before_install:
 - openssl aes-256-cbc -K $encrypted_dd4d4f631c92_key -iv $encrypted_dd4d4f631c92_iv -in hn-sentiment-3b3b291ae079.json.enc -out hn-sentiment-3b3b291ae079.json -d
