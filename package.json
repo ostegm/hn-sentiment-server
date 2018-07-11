@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prestart": "node getEnv",
-    "start": "node index.js",
+    "start": "node getEnv && node index.js",
     "test": "mocha --exit"
   },
   "repository": {
