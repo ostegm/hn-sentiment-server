@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "prestart": "node writeAuthFile.js",
     "start": "node index.js",
     "test": "mocha --exit"
   },

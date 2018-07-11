@@ -41,7 +41,6 @@ app.get('/api/threads/recent', async (req, res) => {
 app.use('/api/threads/', threadsRouter);
 
 
-
 app.use('*', (req, res) => {
   return res.status(404).json({ status: 404, message: 'Not Found' });
 });
