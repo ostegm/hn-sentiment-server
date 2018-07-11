@@ -3,11 +3,12 @@ node_js: node
 services:
 - mongodb
 deploy:
-  provider: gae
-  keyfile: hn-sentiment-3b3b291ae079.json
-  project: hn-sentiment
-  version: prod
-  default: true
+  provider: heroku
+  api_key:
+    secure: lJKO5tgGcF2I/N3tPpqo2JYH8kuA3rifYzhaaV+XXPmamiZHKk7PMGscQJgVuapYyZwy/aFpF8Qu2dyD7QaO0X7M1jne2JbkfnUfQYB75/KiZPwtpCWA8b1t9kxZB0MWZwlnphdjET37e9gPFddCMdisXJ1SqtWMwFCembUs70PotSl4ile87sdE9u7+RY5qr0o+UZXl/06gq7TELjGC3A27c8KOh5bOqCqyMeWsfGDGnqQ9Bc4oY3mlsvUOy4Iq3YNEHamu3HIrxpJIKCZe0bf+63AEbzYEqcMZMvbFLAJHKeOHeipOWqH5ooAL0sW9OEZXtBE5RqfzPywJjHgZ4m28YOedF4icI76PL6sqShFmpsDOAvl7EwsJK+BdD7he8ThExEfvh2tWt/4jcQMCar5QfjpurkuxNknR1Yn4XqTDrKnsOuFQMyCi00us03pRHF7peod83PQ6mbVTd9rquv7jdAXM1ChVLqbFmFg8dmfioN0ajvbUrhtU3HCc1oozcso44W4rddPHyKobxM8qSME0BZ1q6fo3jovKKucFHomO7JO07TmZyQAEEKRy0Hi14nq/5hRa4m6XBh36M9vp+L3DYjzbdKd4dI4abGPbzQtM4ZYGkKDVao0t2QaBhRtK/j9NJEDPR1WP+my9o6/FKFFxemcvukzozeGxJdwjvWo=
+  app: hn-sentiment-server
+  on:
+    repo: ostegm/hn-sentiment-server
 before_install:
 - openssl aes-256-cbc -K $encrypted_ec3aeee44a4a_key -iv $encrypted_ec3aeee44a4a_iv
   -in hn-sentiment-3b3b291ae079.json.enc -out hn-sentiment-3b3b291ae079.json -d
