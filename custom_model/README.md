@@ -103,13 +103,15 @@ Kubenetes engine deployments will automatically roll out the new model version w
 ```
 MODEL_VERSION="V2"
 IMAGE_NAME="gcr.io/$GCP_PROJECT/sentiment"
-mkdir -p /tmp/models/sentiment/$MODEL_VERSION}
+mkdir -p /tmp/models/sentiment/${MODEL_VERSION}
 gsutil cp ${GCS_JOB_DIR}/export/model /tmp/models/sentiment/$MODEL_VERSION}
 docker run -d --name serving_base tensorflow/serving
 docker cp /tmp/models/sentiment/$MODEL_VERSION} serving_base:/models/sentiment
-docker commit --change "ENV MODEL_NAME sentiment" serving_base $USER/sentiment_serving:${MODEL_VERSION}
+docker commit --change "ENV MODEL_NAME sentiment" serving_base $USER/sentiment_serving
 docker kill serving_base
 docker tag $USER/sentiment_serving ${IMAGE_NAME}:${MODEL_VERSION}
+gcloud docker -- push gcr.io/$GCP_PROJECT/sentiment:${MODEL_VERSION}
+
 
 #Get deployment name from kubectl (or yaml file we used to deploy).
 DEPLOYMENT_NAME=sentiment-deployment
@@ -118,6 +120,4 @@ kubectl set image deployment.v1.apps/${DEPLOYMENT_NAME} sentiment-container=${IM
 kubectl describe deployments $DEPLOYMENT_NAME
 
 ```
-
-
 
