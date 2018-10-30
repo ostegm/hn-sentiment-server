@@ -20,8 +20,14 @@ describe('High level server tests', function () {
     return closeServer();
   });
 
-  it('should 200 on GET /threads/recent', async function () {
-    const res = await chai.request(app).get('/api/threads/recent');
+  it('should 200 on GET /threads/gcp/recent', async function () {
+    const res = await chai.request(app).get('/api/threads/gcp/recent');
+    res.should.have.status(200);
+    res.should.be.json;
+  });
+
+  it('should 200 on GET /threads/custom/recent', async function () {
+    const res = await chai.request(app).get('/api/threads/custom/recent');
     res.should.have.status(200);
     res.should.be.json;
   });
