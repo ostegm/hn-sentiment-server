@@ -6,6 +6,9 @@ const mongoose = require('mongoose');
 const express = require('express');
 const { DATABASE_URL, TEST_DATABASE_URL, NODE_ENV, PORT } = require('./config');
 const { router: threadsRouter, Thread } = require('./threads');
+const { router: customRouter, CustomThread } = require('./customModelThreads');
+
+
 
 mongoose.Promise = global.Promise;
 
@@ -29,8 +32,8 @@ app.get('/', (req, res) => {
   res.json({ ok: test });
 });
 
-// Routers
-app.get('/api/threads/recent', async (req, res) => {
+// Routers which rely on GCP's Cloud NLP API
+app.get('/api/threads/gcp/recent', async (req, res) => {
   let recent = await Thread.find(
     {type: 'story'}, {}, { sort: { 'lastUpdated' : -1 } })
     .limit(20);
@@ -38,7 +41,19 @@ app.get('/api/threads/recent', async (req, res) => {
   res.status(200).json(recent)
 })
 
-app.use('/api/threads/', threadsRouter);
+app.use('/api/threads/gcp/', threadsRouter);
+
+
+// Routers which rely on a custom model served via Kubernetes on GCP
+app.get('/api/threads/custom/recent', async (req, res) => {
+  let recent = await CustomThread.find(
+    {type: 'story'}, {}, { sort: { 'lastUpdated' : -1 } })
+    .limit(20);
+  recent = recent.map((r) => ({title: r.title, id: r.id, sentiment: r.avgSentiment}))
+  res.status(200).json(recent)
+})
+
+app.use('/api/threads/custom/', customRouter);
 
 
 app.use('*', (req, res) => {

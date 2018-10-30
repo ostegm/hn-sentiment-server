@@ -4,7 +4,7 @@ const faker = require('faker');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const { app, runServer, closeServer } = require('../index');
-const { Thread, mean, wordCount } = require('../threads');
+const { CustomThread, mean, wordCount } = require('../customModelThreads');
 const { TEST_DATABASE_URL } = require('../config');
 
 process.env.NODE_ENV = 'test';
@@ -54,19 +54,19 @@ function seedCollection() {
     lastUpdated: new Date(1900),
   };
   // this will return a promise
-  return Thread.insertMany([seedThread1, seedThread2]);
+  return CustomThread.insertMany([seedThread1, seedThread2]);
 }
 
 
 function clearCollection() {
   return new Promise((resolve, reject) => {
-    Thread.deleteMany({})
+    CustomThread.deleteMany({})
       .then(result => resolve(result))
       .catch(err => reject(err));
   });
 }
 
-describe('/api/threads/gcp', function () {
+describe('/api/threads/custom', function () {
   before(function () {
     return runServer(TEST_DATABASE_URL);
   });
@@ -85,7 +85,7 @@ describe('/api/threads/gcp', function () {
 
   it('should 200 on GET requests for IDs in the db', async function () {
     this.timeout(5000);
-    const res = await chai.request(app).get('/api/threads/gcp/0');
+    const res = await chai.request(app).get('/api/threads/custom/0');
     res.should.have.status(200);
     res.should.be.json;
     const expectedKeys = [
@@ -104,13 +104,13 @@ describe('/api/threads/gcp', function () {
 
   it('should Update threads older than 1 min', async function () {
     this.timeout(5000);
-    const res = await chai.request(app).get('/api/threads/gcp/8863');
+    const res = await chai.request(app).get('/api/threads/custom/8863');
     res.body.kids.length.should.be.at.least(32);
   });
 
   it('should 500 on GET requests for invalid IDs ', async function () {
     this.timeout(5000);
-    const res = await chai.request(app).get('/api/threads/gcp/XXXX');
+    const res = await chai.request(app).get('/api/threads/custom/XXXX');
     res.should.have.status(500);
   });
 });
