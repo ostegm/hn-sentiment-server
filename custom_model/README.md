@@ -93,5 +93,31 @@ kubectl create -f kube_deploy.yaml
 kubectl get services
 # Get external id from the response of `get services` and use it to ping the server.
 curl -d '{"instances": ["this is so bad", " love"]}' -X POST 35.226.186.209:8501/v1/models/sentiment:predict
+
 ```
+
+
+## Model Versioning
+To push a new model version, simply create a new docker image, push to the cloud repo, and edit the kuberenetes deployment to use this new image.
+Kubenetes engine deployments will automatically roll out the new model version without downtime. 
+```
+MODEL_VERSION="V2"
+IMAGE_NAME="gcr.io/$GCP_PROJECT/sentiment"
+mkdir -p /tmp/models/sentiment/$MODEL_VERSION}
+gsutil cp ${GCS_JOB_DIR}/export/model /tmp/models/sentiment/$MODEL_VERSION}
+docker run -d --name serving_base tensorflow/serving
+docker cp /tmp/models/sentiment/$MODEL_VERSION} serving_base:/models/sentiment
+docker commit --change "ENV MODEL_NAME sentiment" serving_base $USER/sentiment_serving:${MODEL_VERSION}
+docker kill serving_base
+docker tag $USER/sentiment_serving ${IMAGE_NAME}:${MODEL_VERSION}
+
+#Get deployment name from kubectl (or yaml file we used to deploy).
+DEPLOYMENT_NAME=sentiment-deployment
+kubectl set image deployment.v1.apps/${DEPLOYMENT_NAME} sentiment-container=${IMAGE_NAME}:${MODEL_VERSION} --record
+#View description to see update info (see events to note changes based on edits.)
+kubectl describe deployments $DEPLOYMENT_NAME
+
+```
+
+
 
