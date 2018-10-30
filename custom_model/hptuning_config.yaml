@@ -1,0 +1,51 @@
+trainingInput:
+  scaleTier: BASIC_GPU
+  hyperparameters:
+    enableTrialEarlyStopping: True
+    hyperparameterMetricTag: accuracy
+    maxTrials: 80
+    maxParallelTrials: 3
+    params:
+    - parameterName: dropout
+      type: DOUBLE
+      minValue: 0.2
+      maxValue: 0.6
+      scaleType: UNIT_LINEAR_SCALE
+    - parameterName: learning-rate
+      type: DOUBLE
+      minValue: 0.0001
+      maxValue: 0.01
+      scaleType: UNIT_REVERSE_LOG_SCALE
+    - parameterName: first-layer-size
+      type: DISCRETE
+      discreteValues:
+        - 64
+        - 128
+        - 256
+        - 512
+        - 1024
+    - parameterName: num-layers
+      type: INTEGER
+      minValue: 1
+      maxValue: 3
+      scaleType: UNIT_LINEAR_SCALE
+    - parameterName: optimizer
+      type: CATEGORICAL
+      categoricalValues:
+        - Adam
+        - Adagrad
+        - SGD
+    - parameterName: hub-module
+      type: CATEGORICAL
+      categoricalValues:
+      - universal-sentence
+      - universal-sentence-lite
+      - nnlm-128-normalized
+      - nnlm-128
+      - elmo
+      - random
+    - parameterName: train-hub-module
+      type: CATEGORICAL
+      categoricalValues:
+        - "true"
+        - "false"
